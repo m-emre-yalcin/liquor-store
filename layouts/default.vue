@@ -1,15 +1,15 @@
 <template>
-  <div>
+  <v-app>
     <header class="__top">
       <div class="__inner">
-        <div class="logo">
+        <nuxt-link to="/" class="logo">
           <h1>{{ logoTitle }}</h1>
-        </div>
+        </nuxt-link>
       </div>
     </header>
 
     <Nuxt />
-  </div>
+  </v-app>
 </template>
 
 <script>
@@ -44,6 +44,9 @@ export default {
 
 <style scoped lang="scss">
 $header-height: 80px;
+.theme--light.v-application {
+  background-color: unset;
+}
 header.__top {
   width: 100vw;
   height: $header-height;

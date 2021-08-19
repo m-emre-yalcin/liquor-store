@@ -3,11 +3,10 @@ const createTemplate = require('./template')
 require('dotenv').config()
 
 module.exports = async (req, res) => {
-  const { fullname, email, age, gender, description, attachments } = req.body
+  const {
+    name
+  } = req.body
 
-  // console.log(createTemplate({ fullname, age, gender, attachments }))
-
-  if (!email) res.status(400).send('Email is missing.')
 
   try {
     const transporter = nodemailer.createTransport({
@@ -26,12 +25,10 @@ module.exports = async (req, res) => {
     })
 
     await transporter.sendMail({
-      from: `"${fullname}" <${email}>`,
-      to: `Estefulya <${process.env.email_user}>`,
-      subject: `estefulya.com | ${fullname} - ${description.slice(0, 70)}...`,
-      text: `age: ${age}, gender: ${gender}, description: ${description}`,
+      from: `"${name}" <${process.env.email_user}>`,
+      to: `Online Tekel Ortaköy <${process.env.email_user}>`,
+      subject: `${name} yeni bir sipariş verdi`,
       html: createTemplate(req.body),
-      attachments
     })
 
     res.send(`Mail sent successfully.`)

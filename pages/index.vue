@@ -1,5 +1,16 @@
 <template>
   <main>
+    <component
+      :is="component"
+      :data="modalData"
+      @close="component = null"
+      @alert="
+        modalData = $event
+        component = 'order-completed'
+        modalData.type === 'success' ? removeLocalstorageBasket() : ''
+      "
+    />
+
     <!-- <div class="box search-bar"></div> -->
     <div class="box categories">
       <h2>Kategoriler</h2>
@@ -23,7 +34,7 @@
     <div class="box products">
       <h2>Ürünler</h2>
       <ul>
-        <li v-for="product in products" :key="product.id">
+        <li v-for="product in productsAsCategory" :key="product.id">
           <div class="thumbnail">
             <template v-if="product.thumbnail">
               <v-img
@@ -65,7 +76,9 @@
       </ul>
     </div>
     <div class="box basket">
-      <h2>Sepetim</h2>
+      <h2>
+        Sepetim <small>+{{ transportFee }}₺ Getirme ücreti</small>
+      </h2>
       <span v-if="basket.length === 0">Sepetiniz boş</span>
       <ul>
         <li v-for="item in basket" :key="item.id">
@@ -81,10 +94,21 @@
             </div>
           </div>
         </li>
-        <li v-if="basket.length" class="order-btn">
+        <li
+          v-if="basket.length"
+          class="order-btn"
+          @click="
+            component = 'order-details'
+            modalData = {
+              total: $options.filters.money(totalBasket + transportFee),
+            }
+          "
+        >
           <div>
-            <span class="text">Sipariş ver</span>
-            <span class="total">{{ totalBasket | money }}</span>
+            <span class="text">Siparişi Tamamla</span>
+            <span class="total">{{
+              (totalBasket + transportFee) | money
+            }}</span>
           </div>
         </li>
       </ul>
@@ -108,8 +132,18 @@ export default {
   },
   data() {
     return {
-      selectedCategory: null,
+      component: false,
+      modalData: {},
+      transportFee: 5,
+      selectedCategory: {
+        id: -1,
+        name: 'Tümü',
+      },
       categories: [
+        {
+          id: -1,
+          name: 'Tümü',
+        },
         {
           id: 1,
           name: 'Bira',
@@ -143,6 +177,13 @@ export default {
           category: 3,
         },
         {
+          id: 4,
+          name: 'Öküzgözü Şarap',
+          thumbnail: '/images/sarap.jpg',
+          price: 80.99,
+          category: 2,
+        },
+        {
           id: 3,
           name: 'Doritos Cips',
           thumbnail: null,
@@ -166,6 +207,15 @@ export default {
     }
   },
   computed: {
+    productsAsCategory() {
+      if (this.selectedCategory.id === -1) {
+        return this.products
+      } else {
+        return this.products.filter(
+          (product) => product.category === this.selectedCategory.id
+        )
+      }
+    },
     totalBasket() {
       const total = this.basket.reduce((a, b) => {
         a += b.quantity * b.product.price
@@ -175,6 +225,15 @@ export default {
 
       return total
     },
+  },
+  mounted() {
+    let basket = localStorage.getItem('basket')
+    if (basket) {
+      try {
+        basket = JSON.parse(basket)
+        this.basket = basket
+      } catch {}
+    }
   },
   methods: {
     addBasket(product, quantity) {
@@ -203,6 +262,11 @@ export default {
       if (!existing && quantity !== -1) {
         this.basket.push(obj)
       }
+
+      localStorage.setItem('basket', JSON.stringify(this.basket))
+    },
+    removeLocalstorageBasket() {
+      localStorage.removeItem('basket')
     },
   },
 }
@@ -222,6 +286,13 @@ main {
     background-color: white;
     color: #141414;
 
+    &:not(.products) {
+      max-height: calc(100vh - 130px);
+      overflow-y: auto;
+      position: sticky;
+      top: 0;
+    }
+
     h2 {
       color: #212121;
       font-weight: bold;
@@ -236,8 +307,6 @@ main {
     height: 50px;
   }
   .categories {
-    max-height: 100vh;
-    overflow-y: auto;
     ul {
       li {
         div {
@@ -274,7 +343,7 @@ main {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(150px, 200px));
       grid-template-rows: min-content;
-      padding: 1rem;
+      padding: 1rem !important;
       // gap: 1rem;
       li {
         position: relative;
@@ -302,6 +371,16 @@ main {
     }
   }
   .basket {
+    h2 {
+      display: flex;
+      flex: 1;
+      justify-content: space-between;
+      align-items: center;
+      small {
+        font-size: 0.9em;
+        color: var(--tekel-blue);
+      }
+    }
     > span {
       padding: 1rem 1rem 0 1rem;
       display: block;
