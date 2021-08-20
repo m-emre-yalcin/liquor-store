@@ -208,6 +208,11 @@ header + main {
     header.__top + main.admin {
       grid-template-columns: 1fr;
       grid-auto-flow: row;
+      .aside {
+        h2 {
+          display: none;
+        }
+      }
     }
   }
 }

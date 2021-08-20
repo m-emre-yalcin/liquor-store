@@ -1,5 +1,5 @@
 <template>
-  <main v-if="render" class="admin">
+  <main v-if="render" :class="{ login: !loggedIn, admin: loggedIn }">
     <component :is="component" :data="modalData" />
 
     <template v-if="!loggedIn">
@@ -53,6 +53,12 @@
           <li>
             <nuxt-link to="/admin/diger">Diğer</nuxt-link>
           </li>
+          <li>
+            <nuxt-link class="logout" to="/admin" @click.native="logout()">
+              <icn-logout />
+              <span>Çıkış yap</span>
+            </nuxt-link>
+          </li>
         </ul>
       </div>
       <div class="box inside">
@@ -91,7 +97,10 @@ export default {
     }
     this.render = true
 
-    if (this.loggedIn && this.$route.path === '/admin') {
+    if (
+      this.loggedIn &&
+      (this.$route.path === '/admin/' || this.$route.path === '/admin')
+    ) {
       this.$router.push('/admin/kategoriler')
     }
   },
@@ -126,11 +135,20 @@ export default {
 
       this.loading = false
     },
+    logout() {
+      localStorage.removeItem('user')
+      this.loggedIn = false
+    },
   },
 }
 </script>
 
 <style lang="scss" scoped>
+main.login {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 main.admin {
   grid-template-columns: 200px 1fr;
   .box {
@@ -145,6 +163,17 @@ main.admin {
         padding: 1rem;
         a {
           color: #222;
+          &.logout {
+            display: flex;
+            align-items: center;
+            color: #999;
+            svg {
+              width: 15px;
+              height: 15px;
+              fill: #999;
+              margin-right: 8px;
+            }
+          }
         }
         .nuxt-link-active {
           color: var(--tekel-blue);
