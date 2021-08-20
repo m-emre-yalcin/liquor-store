@@ -98,7 +98,7 @@ export default {
     }
   },
   mounted() {
-    let user = localStorage.getItem('user')
+    let user = localStorage.getItem('costumer')
     if (user) {
       try {
         user = JSON.parse(user)
@@ -125,7 +125,7 @@ export default {
           description: this.description,
         }
         if (this.saveInputs) {
-          localStorage.setItem('user', JSON.stringify(user))
+          localStorage.setItem('costumer', JSON.stringify(user))
         }
 
         this.$axios

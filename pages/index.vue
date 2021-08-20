@@ -14,7 +14,17 @@
     <!-- <div class="box search-bar"></div> -->
     <div class="box categories">
       <h2>Kategoriler</h2>
-      <ul>
+      <template v-if="categoryLoading">
+        <v-skeleton-loader
+          v-for="n in 10"
+          :key="n"
+          height="50px"
+          cols="12"
+          style="margin: 0 !important"
+          type="list-item"
+        ></v-skeleton-loader>
+      </template>
+      <ul v-else>
         <li
           v-for="category in categories"
           :key="category.id"
@@ -33,7 +43,18 @@
     </div>
     <div class="box products">
       <h2>Ürünler</h2>
-      <ul>
+      <template v-if="productLoading">
+        <ul>
+          <li v-for="n in 12" :key="n">
+            <v-skeleton-loader
+              cols="4"
+              max-width="200px"
+              type="image"
+            ></v-skeleton-loader>
+          </li>
+        </ul>
+      </template>
+      <ul v-else>
         <li v-for="product in productsAsCategory" :key="product.id">
           <div class="thumbnail">
             <template v-if="product.thumbnail">
@@ -132,6 +153,8 @@ export default {
   },
   data() {
     return {
+      categoryLoading: true,
+      productLoading: true,
       component: false,
       modalData: {},
       transportFee: 5,
@@ -139,58 +162,8 @@ export default {
         id: -1,
         name: 'Tümü',
       },
-      categories: [
-        {
-          id: -1,
-          name: 'Tümü',
-        },
-        {
-          id: 1,
-          name: 'Bira',
-        },
-        {
-          id: 2,
-          name: 'Şarap',
-        },
-        {
-          id: 3,
-          name: 'Viski',
-        },
-        {
-          id: 4,
-          name: 'Atıştırmalık',
-        },
-      ],
-      products: [
-        {
-          id: 1,
-          name: 'Efes 40cl',
-          thumbnail: '/images/efes-pilsen.jpg',
-          category: 1,
-          price: 19.99,
-        },
-        {
-          id: 2,
-          name: 'Jack Daniels Viski',
-          thumbnail: null,
-          price: 238.5,
-          category: 3,
-        },
-        {
-          id: 4,
-          name: 'Öküzgözü Şarap',
-          thumbnail: '/images/sarap.jpg',
-          price: 80.99,
-          category: 2,
-        },
-        {
-          id: 3,
-          name: 'Doritos Cips',
-          thumbnail: null,
-          price: 6.9,
-          category: 4,
-        },
-      ],
+      categories: [],
+      products: [],
       basket: [
         // {
         //   id: 1,
@@ -204,6 +177,11 @@ export default {
         //   quantity: 2,
         // },
       ],
+      attrs: {
+        class: 'mb-6',
+        boilerplate: true,
+        elevation: 2,
+      },
     }
   },
   computed: {
@@ -226,7 +204,7 @@ export default {
       return total
     },
   },
-  mounted() {
+  async mounted() {
     let basket = localStorage.getItem('basket')
     if (basket) {
       try {
@@ -234,6 +212,42 @@ export default {
         this.basket = basket
       } catch {}
     }
+
+    this.categoryLoading = true
+    await this.$fire.database.ref('categories').once('value', (snapshot) => {
+      const data = snapshot.val()
+
+      if (data != null) {
+        Object.values(data).forEach((v) => {
+          const category = {
+            id: Number(v.id),
+            name: v.name,
+          }
+
+          this.categories.push(category)
+        })
+      }
+      this.categoryLoading = false
+    })
+    this.productLoading = true
+    await this.$fire.database.ref('products').once('value', (snapshot) => {
+      const data = snapshot.val()
+
+      if (data != null) {
+        Object.values(data).forEach((v) => {
+          const product = {
+            id: Number(v.id),
+            name: v.name,
+            thumbnail: v.thumbnail || '',
+            category: Number(v.category),
+            price: Number(v.price),
+          }
+
+          this.products.push(product)
+        })
+      }
+      this.productLoading = false
+    })
   },
   methods: {
     addBasket(product, quantity) {
@@ -273,35 +287,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-$border: #2121210e;
 main {
-  display: grid;
-  grid-template-columns: 200px 1fr 260px;
-  grid-template-rows: min-content;
-  overflow: auto;
-  gap: 1rem;
-  padding: 1rem 20%;
-  .box {
-    border-radius: 4px;
-    background-color: white;
-    color: #141414;
-
-    &:not(.products) {
-      max-height: calc(100vh - 130px);
-      overflow-y: auto;
-      position: sticky;
-      top: 0;
-    }
-
-    h2 {
-      color: #212121;
-      font-weight: bold;
-      font-size: 14px;
-      font-weight: 600;
-      padding: 0.5rem;
-      border-bottom: 1px solid $border;
-    }
-  }
   .search-bar {
     grid-column: 1 / -1;
     height: 50px;
@@ -317,7 +303,7 @@ main {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          border-bottom: 1px solid $border;
+          border-bottom: 1px solid var(--border-color);
           &:hover {
             background-color: rgb(231, 230, 230);
           }
@@ -348,7 +334,7 @@ main {
       li {
         position: relative;
         background-color: #fff;
-        border: 1px solid $border;
+        border: 1px solid var(--border-color);
         border-radius: 4px;
         .thumbnail {
           display: flex;
@@ -391,7 +377,7 @@ main {
       li {
         padding: 1rem;
         position: relative;
-        border-bottom: 1px solid $border;
+        border-bottom: 1px solid var(--border-color);
         .quantity-buttons {
           top: auto;
           display: flex;
@@ -464,7 +450,7 @@ main {
       display: flex;
       align-items: center;
       justify-content: center;
-      border: 1px solid $border;
+      border: 1px solid var(--border-color);
       border-radius: 4px;
       svg {
         width: 10px;

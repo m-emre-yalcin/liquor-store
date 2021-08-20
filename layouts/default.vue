@@ -3,7 +3,9 @@
     <header class="__top">
       <div class="__inner">
         <nuxt-link to="/" class="logo">
-          <h1>{{ logoTitle }}</h1>
+          <h1 style="white-space: nowrap">
+            {{ logoTitle }}{{ $route.name === 'admin' ? ' - Panel' : '' }}
+          </h1>
         </nuxt-link>
       </div>
     </header>
@@ -42,7 +44,7 @@ export default {
 </script>
 
 
-<style scoped lang="scss">
+<style lang="scss">
 $header-height: 80px;
 .theme--light.v-application {
   background-color: unset;
@@ -61,6 +63,8 @@ header.__top {
     width: 60%;
     position: relative;
     .logo {
+      user-select: none;
+      -webkit-user-select: none;
       display: flex;
       align-items: center;
 
@@ -73,5 +77,32 @@ header.__top {
 }
 header + main {
   height: calc(100vh - #{$header-height});
+  display: grid;
+  grid-template-columns: 200px 1fr 260px;
+  grid-template-rows: min-content;
+  overflow: auto;
+  gap: 1rem;
+  padding: 1rem 20%;
+  .box {
+    border-radius: 4px;
+    background-color: white;
+    color: #141414;
+
+    &:not(.products) {
+      max-height: calc(100vh - 130px);
+      overflow-y: auto;
+      position: sticky;
+      top: 0;
+    }
+
+    > h2 {
+      color: #212121;
+      font-weight: bold;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 0.5rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+  }
 }
 </style>
