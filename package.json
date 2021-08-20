@@ -18,6 +18,7 @@
     "firebase": "^8.9.1",
     "nuxt": "^2.15.7",
     "nuxt-svg-loader": "^1.2.0",
+    "stickybits": "^3.7.9",
     "vuetify": "^2.5.5"
   },
   "devDependencies": {

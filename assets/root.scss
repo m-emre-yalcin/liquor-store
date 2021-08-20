@@ -18,8 +18,22 @@ a {
   text-decoration: none;
 }
 html,
+body,
+.v-application {
+  // overflow: hidden !important;
+  touch-action: none;
+}
+main {
+  z-index: 10;
+}
+header {
+  overflow: hidden;
+}
+
+main,
+html,
 body {
-  overflow: hidden !important;
+  -webkit-overflow-scrolling: touch;
 }
 
 ul {

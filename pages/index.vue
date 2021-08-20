@@ -163,7 +163,12 @@ export default {
         id: -1,
         name: 'Tümü',
       },
-      categories: [],
+      categories: [
+        {
+          id: -1,
+          name: 'Tümü',
+        },
+      ],
       products: [],
       basket: [
         // {

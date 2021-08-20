@@ -23,6 +23,7 @@
 </template>
 
 <script>
+import stickybits from 'stickybits'
 import config from '@/nuxt.config'
 export default {
   data() {
@@ -47,6 +48,19 @@ export default {
       right: true,
       title: 'Vuetify.js',
     }
+  },
+  mounted() {
+    // when the window is resized
+    const stickybitsInstancetoBeUpdated = stickybits('.box.categories', {
+      stickyBitStickyOffset: 0,
+    })
+    window.addEventListener('resize', () => {
+      stickybitsInstancetoBeUpdated.update()
+    })
+    // when the url hash changes
+    window.addEventListener('hashchange', () => {
+      stickybitsInstancetoBeUpdated.update()
+    })
   },
   methods: {
     scrollBottom() {
@@ -188,7 +202,7 @@ header + main {
       }
     }
     header + main {
-      grid-template-columns: 160px 1fr;
+      grid-template-columns: 1fr 1fr;
       .categories {
         overflow-y: unset !important;
       }
