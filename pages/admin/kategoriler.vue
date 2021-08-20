@@ -29,6 +29,7 @@
                     <v-text-field
                       v-model="editedItem.name"
                       label="Kategori"
+                      maxlength="14"
                     ></v-text-field>
                   </v-col>
                 </v-row>

@@ -35,7 +35,7 @@
               selected: selectedCategory && selectedCategory.id === category.id,
             }"
           >
-            <span>{{ category.name }}</span>
+            <span>{{ category.name | limit(14) }}</span>
             <icn-right-arrow />
           </div>
         </li>
@@ -98,7 +98,8 @@
     </div>
     <div class="box basket">
       <h2>
-        Sepetim <small>+{{ transportFee }}₺ Getirme ücreti</small>
+        Sepetim
+        <small v-if="transportFee">+{{ transportFee }}₺ Getirme ücreti</small>
       </h2>
       <span v-if="basket.length === 0">Sepetiniz boş</span>
       <ul>
@@ -157,7 +158,7 @@ export default {
       productLoading: true,
       component: false,
       modalData: {},
-      transportFee: 5,
+      transportFee: null,
       selectedCategory: {
         id: -1,
         name: 'Tümü',
@@ -212,6 +213,10 @@ export default {
         this.basket = basket
       } catch {}
     }
+    await this.$fire.database.ref('others/0').once('value', (snapshot) => {
+      // 0 : { title, value }
+      this.transportFee = Number(snapshot.val().value)
+    })
 
     this.categoryLoading = true
     await this.$fire.database.ref('categories').once('value', (snapshot) => {

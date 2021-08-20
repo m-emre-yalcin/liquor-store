@@ -4,9 +4,17 @@
       <div class="__inner">
         <nuxt-link to="/" class="logo">
           <h1 style="white-space: nowrap">
-            {{ logoTitle }}{{ $route.name === 'admin' ? ' - Panel' : '' }}
+            {{ logoTitle }}{{ $route.name.includes('admin') ? ' - Panel' : '' }}
           </h1>
         </nuxt-link>
+
+        <div
+          v-if="!$route.name.includes('admin')"
+          class="basket-btn"
+          @click="scrollBottom()"
+        >
+          <icn-basket />
+        </div>
       </div>
     </header>
 
@@ -39,6 +47,14 @@ export default {
       right: true,
       title: 'Vuetify.js',
     }
+  },
+  methods: {
+    scrollBottom() {
+      document.querySelector('.__top + main').scrollTo({
+        top: document.querySelector('.__top + main').scrollHeight,
+        behavior: 'smooth',
+      })
+    },
   },
 }
 </script>
@@ -73,6 +89,20 @@ header.__top {
         color: white;
       }
     }
+    .basket-btn {
+      display: none;
+      cursor: pointer;
+      padding: 10px;
+      position: absolute;
+      right: 0px;
+      border-radius: 4px;
+      border: 1px solid white;
+      svg {
+        width: 25px;
+        height: 25px;
+        fill: white;
+      }
+    }
   }
 }
 header + main {
@@ -83,6 +113,7 @@ header + main {
   overflow: auto;
   gap: 1rem;
   padding: 1rem 20%;
+
   .box {
     border-radius: 4px;
     background-color: white;
@@ -102,6 +133,81 @@ header + main {
       font-weight: 600;
       padding: 0.5rem;
       border-bottom: 1px solid var(--border-color);
+    }
+  }
+}
+@media screen and (max-width: 1560px) {
+  header.__top {
+    .__inner {
+      width: 80%;
+    }
+  }
+  header + main {
+    padding: 1rem 10%;
+  }
+}
+@media screen and (max-width: 1160px) {
+  header.__top {
+    .__inner {
+      width: 95%;
+    }
+  }
+  header + main {
+    padding: 1rem 2.5%;
+  }
+}
+@media screen and (max-width: 978px) {
+  header.__top {
+    .__inner {
+      width: calc(100% - 2rem);
+      .basket-btn {
+        display: flex;
+      }
+    }
+  }
+  header + main {
+    padding: 1rem;
+    grid-template-columns: 200px 1fr;
+    .categories {
+      overflow-y: unset !important;
+    }
+    .basket {
+      z-index: 1;
+      box-shadow: 0 -5px 10px rgba(0, 0, 0, 0.05);
+      grid-column: 1 / -1;
+      position: static !important;
+      overflow-y: unset !important;
+    }
+  }
+  @media screen and (max-width: 680px) {
+    header.__top {
+      .__inner {
+        .logo {
+          font-size: 0.8em;
+        }
+      }
+    }
+    header + main {
+      grid-template-columns: 160px 1fr;
+      .categories {
+        overflow-y: unset !important;
+      }
+      .products {
+        ul {
+          gap: 1rem;
+        }
+      }
+      .basket {
+        z-index: 1;
+        box-shadow: 0 -5px 10px rgba(0, 0, 0, 0.05);
+        grid-column: 1 / -1;
+        position: static !important;
+        overflow-y: unset !important;
+      }
+    }
+    header.__top + main.admin {
+      grid-template-columns: 1fr;
+      grid-auto-flow: row;
     }
   }
 }
