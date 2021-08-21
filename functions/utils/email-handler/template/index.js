@@ -12,7 +12,7 @@ module.exports = function ({
     <tr>  
       <td stlye="padding: 6px;">${item.id}</td>
       <td stlye="padding: 6px;">${item.product.name}</td>
-      <td stlye="padding: 6px;">${item.product.price}</td>
+      <td stlye="padding: 6px;">${item.product.price}₺</td>
       <td stlye="padding: 6px;">${item.product.category}</td>
       <td stlye="padding: 6px;">${item.quantity}</td>
       <td stlye="padding: 6px;">${Number(item.quantity * item.product.price)}₺</td>
@@ -43,20 +43,20 @@ module.exports = function ({
     </tr>
   </table>
   <hr>
-  <h5>Siparişler</h5>
-  <table cellspacing="0" border="0">
+  <h3>Siparişler</h3>
+  <table cellspacing="0" border="1">
   <tr>
-    <th stlye="padding: 6px;">id</th>
-    <th stlye="padding: 6px;">ürün isim</th>
-    <th stlye="padding: 6px;">ürün fiyat</th>
-    <th stlye="padding: 6px;">ürün kategori</th>
-    <th stlye="padding: 6px;">miktar</th>
-    <th stlye="padding: 6px;">toplam</th>
+    <th stlye="text-align: left; padding: 6px;">id</th>
+    <th stlye="text-align: left; padding: 6px;">ürün isim</th>
+    <th stlye="text-align: left; padding: 6px;">ürün fiyat</th>
+    <th stlye="text-align: left; padding: 6px;">ürün kategori</th>
+    <th stlye="text-align: left; padding: 6px;">miktar</th>
+    <th stlye="text-align: left; padding: 6px;">toplam</th>
     </tr>
     ${orders}
     <tr>
       <td stlye="padding: 6px;" colspan="6" style="text-align:right;">
-      sipariş tutarı: ${total}
+      sipariş tutarı + getirme ücreti: <b>${total}</b>
       </td>
     <tr>
   </table>
