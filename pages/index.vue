@@ -105,9 +105,9 @@
       <ul>
         <li v-for="item in basket" :key="item.id">
           <div class="quantity-buttons">
-            <div @click="addBasket(item.product, 1)"><icn-plus /></div>
-            <div class="quantity">{{ item.quantity }}</div>
             <div @click="addBasket(item.product, -1)"><icn-minus /></div>
+            <div class="quantity">{{ item.quantity }}</div>
+            <div @click="addBasket(item.product, 1)"><icn-plus /></div>
           </div>
           <div class="group">
             <div class="name">{{ item.product.name | limit(19) }}</div>
@@ -133,6 +133,12 @@
             }}</span>
           </div>
         </li>
+        <li @click="clearBasket()">
+          <div class="clear-btn">
+            <icn-trash />
+            <span>Sepeti temizle</span>
+          </div>
+        </li>
       </ul>
     </div>
 
@@ -152,6 +158,7 @@ export default {
       return text.length > limit ? text.slice(0, limit) + '...' : text
     },
   },
+  scrollToTop: true,
   data() {
     return {
       categoryLoading: true,
@@ -218,6 +225,12 @@ export default {
         this.basket = basket
       } catch {}
     }
+    const basketCount = this.basket.reduce((a, b) => {
+      a += b.quantity
+      return a
+    }, 0)
+    this.$store.commit('add-basket', basketCount)
+
     await this.$fire.database.ref('others/0').once('value', (snapshot) => {
       // 0 : { title, value }
       this.transportFee = Number(snapshot.val().value)
@@ -288,6 +301,17 @@ export default {
       }
 
       localStorage.setItem('basket', JSON.stringify(this.basket))
+
+      const basketCount = this.basket.reduce((a, b) => {
+        a += b.quantity
+        return a
+      }, 0)
+      this.$store.commit('add-basket', basketCount)
+    },
+    clearBasket() {
+      this.basket = []
+      this.removeLocalstorageBasket()
+      this.$store.commit('add-basket', 0)
     },
     removeLocalstorageBasket() {
       localStorage.removeItem('basket')
@@ -442,6 +466,21 @@ main {
             border: 1px solid var(--tekel-blue);
             color: var(--tekel-blue);
           }
+        }
+      }
+      li .clear-btn {
+        cursor: pointer;
+        font-weight: 600;
+        color: var(--tekel-blue);
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        svg {
+          width: 15px;
+          height: 15px;
+          margin-right: 6px;
+          fill: var(--tekel-blue);
         }
       }
     }

@@ -2,15 +2,19 @@
   <v-app>
     <header class="__top">
       <div class="__inner">
-        <nuxt-link to="/" class="logo">
+        <nuxt-link to="/" class="logo" @click.native="scrolltoTop()">
           <h1 style="white-space: nowrap">
             {{ logoTitle }}{{ $route.name.includes('admin') ? ' - Panel' : '' }}
           </h1>
+          <small
+            >Sipariş bölgelerimiz: Ortaköy, Ulus, Levazım, Etiler, Beşiktaş
+          </small>
         </nuxt-link>
 
         <div
           v-if="!$route.name.includes('admin')"
           class="basket-btn"
+          :value="$store.state.basketCount"
           @click="scrollBottom()"
         >
           <icn-basket />
@@ -23,7 +27,6 @@
 </template>
 
 <script>
-import stickybits from 'stickybits'
 import config from '@/nuxt.config'
 export default {
   data() {
@@ -49,23 +52,16 @@ export default {
       title: 'Vuetify.js',
     }
   },
-  mounted() {
-    // when the window is resized
-    const stickybitsInstancetoBeUpdated = stickybits('.box.categories', {
-      stickyBitStickyOffset: 0,
-    })
-    window.addEventListener('resize', () => {
-      stickybitsInstancetoBeUpdated.update()
-    })
-    // when the url hash changes
-    window.addEventListener('hashchange', () => {
-      stickybitsInstancetoBeUpdated.update()
-    })
-  },
   methods: {
     scrollBottom() {
       document.querySelector('.__top + main').scrollTo({
         top: document.querySelector('.__top + main').scrollHeight,
+        behavior: 'smooth',
+      })
+    },
+    scrolltoTop() {
+      document.querySelector('.__top + main').scrollTo({
+        top: 0,
         behavior: 'smooth',
       })
     },
@@ -96,11 +92,14 @@ header.__top {
       user-select: none;
       -webkit-user-select: none;
       display: flex;
-      align-items: center;
+      flex-direction: column;
+      color: white;
 
       h1 {
         font-family: Arial, Helvetica, sans-serif;
-        color: white;
+      }
+      small {
+        font-size: 10px;
       }
     }
     .basket-btn {
@@ -115,6 +114,21 @@ header.__top {
         width: 25px;
         height: 25px;
         fill: white;
+      }
+      &::after {
+        position: absolute;
+        right: -10px;
+        top: -10px;
+        border-radius: 4px;
+        content: attr(value);
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        background-color: white;
+        color: var(--tekel-blue);
       }
     }
   }
@@ -183,7 +197,7 @@ header + main {
     padding: 1rem;
     grid-template-columns: 200px 1fr;
     .categories {
-      overflow-y: unset !important;
+      overflow: auto;
     }
     .basket {
       z-index: 1;
@@ -195,6 +209,9 @@ header + main {
   }
   @media screen and (max-width: 680px) {
     header.__top {
+      position: fixed !important;
+      width: 100vw;
+      z-index: 9;
       .__inner {
         .logo {
           font-size: 0.8em;
@@ -202,13 +219,44 @@ header + main {
       }
     }
     header + main {
-      grid-template-columns: 1fr 1fr;
-      .categories {
+      position: fixed;
+      width: 100vw;
+      top: 80px;
+      grid-template-columns: 1fr;
+      padding: 0;
+      // overflow: hidden;
+      .box.categories {
+        border-radius: 0px;
+        h2 {
+          display: none;
+        }
         overflow-y: unset !important;
+        grid-column: 1 / -1;
+        z-index: 9;
+        ul {
+          overflow-x: auto;
+          display: flex;
+          white-space: nowrap;
+
+          li {
+            div {
+              min-width: 80px;
+              justify-content: center;
+            }
+          }
+        }
       }
       .products {
+        z-index: 12;
+        h2 {
+          display: none;
+        }
         ul {
           gap: 1rem;
+          grid-template-columns: repeat(
+            auto-fill,
+            minmax(140px, auto)
+          ) !important;
         }
       }
       .basket {

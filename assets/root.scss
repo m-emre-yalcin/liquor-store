@@ -18,10 +18,14 @@ a {
   text-decoration: none;
 }
 html,
-body,
-.v-application {
-  // overflow: hidden !important;
+body {
+  z-index: 0;
+  overflow: hidden !important;
   touch-action: none;
+}
+
+.v-application {
+  z-index: 9;
 }
 main {
   z-index: 10;

@@ -25,6 +25,7 @@
           <v-textarea
             v-model="address"
             required
+            rows="2"
             :rules="[(v) => !!v || 'Adresiniz gerekli']"
             label="Adresiniz*"
             hint="Sadece Ortaköy, Ulus, Levazım, Etiler, Beşiktaş bölgelerinden sipariş alabilmekteyiz."
@@ -32,7 +33,7 @@
 
           <v-text-field
             v-model="description"
-            label="Sipariş açıklaması*"
+            label="Sipariş açıklaması"
           ></v-text-field>
 
           <div>Sipariş Tutarınız {{ data.total }}</div>
@@ -130,7 +131,7 @@ export default {
 
         this.$axios
           .post(
-            'https://us-central1-tekelmailfunction.cloudfunctions.net/app',
+            'https://us-central1-tekelmailfunction.cloudfunctions.net/app/contact-email',
             user
           )
           .then((res) => {
