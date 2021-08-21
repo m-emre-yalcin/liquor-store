@@ -1,5 +1,5 @@
 <template>
-  <main>
+  <main @scroll="fixBug">
     <component
       :is="component"
       :data="modalData"
@@ -12,7 +12,7 @@
     />
 
     <!-- <div class="box search-bar"></div> -->
-    <div class="box categories" @scroll.stop.prevent>
+    <div v-if="renderCategories" class="box categories">
       <h2>Kategoriler</h2>
       <template v-if="categoryLoading">
         <v-skeleton-loader
@@ -195,6 +195,8 @@ export default {
         boilerplate: true,
         elevation: 2,
       },
+      opacity: 1,
+      renderCategories: true,
     }
   },
   computed: {
@@ -217,6 +219,7 @@ export default {
       return total
     },
   },
+
   async mounted() {
     let basket = localStorage.getItem('basket')
     if (basket) {
@@ -315,6 +318,15 @@ export default {
     },
     removeLocalstorageBasket() {
       localStorage.removeItem('basket')
+    },
+    fixBug(e) {
+      if (document.body.clientWidth <= 680) {
+        clearInterval(this.iterval)
+        document.querySelector('.box.categories').style.opacity = 0
+        this.iterval = setInterval(() => {
+          document.querySelector('.box.categories').style.opacity = 1
+        }, 1000)
+      }
     },
   },
 }

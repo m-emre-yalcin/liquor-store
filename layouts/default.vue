@@ -220,7 +220,8 @@ header + main {
     }
     header + main {
       position: fixed;
-      width: 100vw;
+      left: 0;
+      right: 0;
       top: 80px;
       grid-template-columns: 1fr;
       padding: 0;
@@ -237,10 +238,10 @@ header + main {
         grid-column: 1 / -1;
         z-index: 9;
         ul {
+          width: 100vw;
           overflow-x: auto;
           display: flex;
           white-space: nowrap;
-
           li {
             div {
               min-width: 80px;
