@@ -182,7 +182,9 @@ export default {
       if (this.editedIndex > -1) {
         Object.assign(this.categories[this.editedIndex], this.editedItem)
       } else {
-        this.editedItem.id = Math.max(...this.categories.map((c) => c.id)) + 1
+        this.editedItem.id = this.categories.length
+          ? Math.max(...this.categories.map((c) => c.id)) + 1
+          : 1
         this.categories.push(this.editedItem)
       }
       this.$fire.database.ref('categories').set(this.categories)

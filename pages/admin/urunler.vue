@@ -289,7 +289,7 @@ export default {
         if (this.editedIndex > -1) {
           Object.assign(this.products[this.editedIndex], this.editedItem)
         } else {
-          this.editedItem.id = Math.max(...this.products.map((c) => c.id)) + 1
+          this.editedItem.id = this.products.length ? Math.max(...this.products.map((c) => c.id)) + 1 : 1
           this.products.push(this.editedItem)
         }
         this.loading = true
