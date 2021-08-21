@@ -227,6 +227,9 @@ header + main {
       // overflow: hidden;
       .box.categories {
         border-radius: 0px;
+        position: fixed;
+        top: 80px;
+        z-index: 12 !important;
         h2 {
           display: none;
         }
@@ -247,7 +250,8 @@ header + main {
         }
       }
       .products {
-        z-index: 12;
+        z-index: 10;
+        margin-top: 40px;
         h2 {
           display: none;
         }
@@ -265,6 +269,9 @@ header + main {
         grid-column: 1 / -1;
         position: static !important;
         overflow-y: unset !important;
+      }
+      footer {
+        display: none;
       }
     }
     header.__top + main.admin {

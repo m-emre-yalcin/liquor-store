@@ -22,6 +22,7 @@ body {
   z-index: 0;
   overflow: hidden !important;
   touch-action: none;
+  scroll-behavior: smooth;
 }
 
 .v-application {

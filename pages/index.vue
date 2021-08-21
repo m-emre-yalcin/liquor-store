@@ -12,7 +12,7 @@
     />
 
     <!-- <div class="box search-bar"></div> -->
-    <div class="box categories">
+    <div class="box categories" @scroll.stop.prevent>
       <h2>Kategoriler</h2>
       <template v-if="categoryLoading">
         <v-skeleton-loader
