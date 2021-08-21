@@ -124,6 +124,8 @@ export default {
           address: this.address,
           paymentMethod: this.paymentMethod,
           description: this.description,
+          basket: this.data.basket,
+          total: this.data.total,
         }
         if (this.saveInputs) {
           localStorage.setItem('costumer', JSON.stringify(user))

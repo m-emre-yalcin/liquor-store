@@ -7,7 +7,7 @@
       @alert="
         modalData = $event
         component = 'order-completed'
-        modalData.type === 'success' ? removeLocalstorageBasket() : ''
+        modalData.type === 'success' ? clearBasket() : ''
       "
     />
 
@@ -123,6 +123,7 @@
             component = 'order-details'
             modalData = {
               total: $options.filters.money(totalBasket + transportFee),
+              basket,
             }
           "
         >
