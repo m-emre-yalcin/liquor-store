@@ -2,14 +2,20 @@
   <v-app>
     <header class="__top">
       <div class="__inner">
-        <nuxt-link to="/" class="logo" @click.native="scrolltoTop()">
-          <h1 style="white-space: nowrap">
-            {{ logoTitle }}{{ $route.name.includes('admin') ? ' - Panel' : '' }}
-          </h1>
-          <small
-            >Sipariş bölgelerimiz: Ortaköy, Ulus, Levazım, Etiler, Beşiktaş
-          </small>
-        </nuxt-link>
+        <div class="logo">
+          <nuxt-link to="/" @click.stop.prevent.native="scrolltoTop()">
+            <h1 style="white-space: nowrap">
+              {{ logoTitle
+              }}{{ $route.name.includes('admin') ? ' - Panel' : '' }}
+            </h1>
+          </nuxt-link>
+          <a href="tel:+905426858484">
+            <small>
+              Sipariş bölgelerimiz: Ortaköy, Ulus, Levazım, Etiler, Beşiktaş
+            </small>
+            <small> Bizi arayın: 0542 685 84 84 </small>
+          </a>
+        </div>
 
         <div
           v-if="!$route.name.includes('admin')"
@@ -97,9 +103,17 @@ header.__top {
 
       h1 {
         font-family: Arial, Helvetica, sans-serif;
+        font-size: 2em;
       }
-      small {
+      small,
+      a {
+        color: white;
         font-size: 10px;
+      }
+      a {
+        display: flex;
+        flex-direction: column;
+        padding: 4px 0;
       }
     }
     .basket-btn {
