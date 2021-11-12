@@ -1,5 +1,7 @@
 # onlinetekelortakoy
 
+## [`demo`](https://onlinetekelortakoy.netlify.app/)
+
 ## Build Setup
 
 ```bash
