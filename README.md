@@ -1,6 +1,8 @@
-# onlinetekelortakoy
+# online liquor store
 
 ## [`demo`](https://onlinetekelortakoy.netlify.app/)
+
+there is no contribution is needed. if you liked the demo, you're free to use it for your own needs.
 
 ## Build Setup
 
